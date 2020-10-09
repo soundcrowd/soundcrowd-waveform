@@ -16,20 +16,24 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.*
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 /**
  * Created by tiefensuche on 6/10/17.
  */
 class WaveformView : RelativeLayout, OnTouchListener {
+
     private val position = Point()
-    public lateinit var imageView: ImageView
+    lateinit var imageView: ImageView
     private lateinit var mContext: Context
+    private lateinit var mWaveform: View
     private lateinit var imageViewWaveformBackground: ImageView
     private lateinit var imageViewWaveformArea: ImageView
     private lateinit var cuePointView: RelativeLayout
     private lateinit var displaySize: Point
-    public var desiredWidth: Int = 0
-    public var desiredHeight: Int = 0
+    var desiredWidth: Int = 0
+    var desiredHeight: Int = 0
     private var x = 0
     private var click = false
     private var scrolling = false
@@ -52,6 +56,7 @@ class WaveformView : RelativeLayout, OnTouchListener {
     private fun init(context: Context) {
         LayoutInflater.from(context).inflate(R.layout.waveform, this, true)
         this.mContext = context
+        mWaveform = findViewById(R.id.waveform)
         imageView = findViewById(R.id.imageViewWaveform)
         imageViewWaveformArea = findViewById(R.id.imageViewWaveformArea)
         imageViewWaveformBackground = findViewById(R.id.imageViewWaveformBackground)
@@ -72,7 +77,6 @@ class WaveformView : RelativeLayout, OnTouchListener {
         imageViewWaveformBackground.minimumHeight = desiredHeight
         setProgress(0, 1)
         scrolling = false
-        setVisible(true)
         callback?.onWaveformLoaded()
     }
 
@@ -98,7 +102,7 @@ class WaveformView : RelativeLayout, OnTouchListener {
             x = -displaySize.x / 2
         }
         if (x > desiredWidth - displaySize.x / 2) {
-            x = Math.round((desiredWidth - displaySize.x / 2).toFloat())
+            x = (desiredWidth - displaySize.x / 2).toFloat().roundToInt()
         }
         imageView.scrollTo(x, 0)
         cuePointView.scrollTo(x, 0)
@@ -124,27 +128,25 @@ class WaveformView : RelativeLayout, OnTouchListener {
                 doScroll()
             }
             click = false
-            position.set(Math.round(event.x), Math.round(event.y))
+            position.set(event.x.roundToInt(), event.y.roundToInt())
             scrolling = true
         }
         if (event.action == MotionEvent.ACTION_UP) {
-            callback?.onSeek(Math.round((x + displaySize.x.toFloat() / 2) * (duration.toFloat() / desiredWidth)).toLong())
+            callback?.onSeek(((x + displaySize.x.toFloat() / 2) * (duration.toFloat() / desiredWidth)).roundToLong())
             click = false
             scrolling = false
         }
         return true
     }
 
-    fun setVisible(visible: Boolean) {
-        imageView.visibility = if (visible) View.VISIBLE else View.INVISIBLE
-        imageViewWaveformBackground.visibility = if (visible) View.VISIBLE else View.INVISIBLE
-        cuePointView.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+    fun setVisible(visibility: Int) {
+        mWaveform.visibility = visibility
     }
 
     fun setDisplaySize(displaySize: Point) {
         this.displaySize = displaySize
         desiredHeight = displaySize.y / 6
-        desiredWidth = Math.round(WAVEFORM_WIDTH * (desiredHeight.toFloat() / WAVEFORM_HEIGHT))
+        desiredWidth = (WAVEFORM_WIDTH * (desiredHeight.toFloat() / WAVEFORM_HEIGHT)).roundToInt()
     }
 
     fun setCallback(callback: Callback) {
@@ -187,7 +189,6 @@ class WaveformView : RelativeLayout, OnTouchListener {
                     // create an alert dialog
                     val alert = alertDialogBuilder.create()
                     alert.show()
-
                 } else if (i == R.id.delete) {
                     cuePointView.removeView(imageViewStar)
                     cuePointView.removeView(descLayout)
@@ -200,14 +201,14 @@ class WaveformView : RelativeLayout, OnTouchListener {
         }
         imageViewStar.setImageBitmap(icon)
         imageViewStar.setColorFilter(Color.WHITE)
-        val params = RelativeLayout.LayoutParams(icon.width, icon.height)
-        params.leftMargin = Math.round((cuePoint.position.toLong() * desiredWidth / duration).toFloat()) - icon.width / 2
+        val params = LayoutParams(icon.width, icon.height)
+        params.leftMargin = (cuePoint.position.toLong() * desiredWidth / duration).toFloat().roundToInt() - icon.width / 2
         cuePointView.addView(imageViewStar, params)
 
         val paramsDesc = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         descLayout.addView(textView, paramsDesc)
 
-        val paramsDescLayout = RelativeLayout.LayoutParams(textView.maxWidth, textView.maxHeight)
+        val paramsDescLayout = LayoutParams(textView.maxWidth, textView.maxHeight)
         paramsDescLayout.leftMargin = params.leftMargin + icon.width
         paramsDescLayout.topMargin = icon.height / 4
         cuePointView.addView(descLayout, paramsDescLayout)
@@ -215,18 +216,13 @@ class WaveformView : RelativeLayout, OnTouchListener {
 
     interface Callback {
         fun onSeek(position: Long)
-
         fun onSeeking()
-
         fun onCuePointSetText(mediaId: String, position: Int, text: String)
-
         fun onCuePointDelete(mediaId: String, position: Int)
-
         fun onWaveformLoaded()
     }
 
     companion object {
-
         private const val WAVEFORM_WIDTH = 1800
         private const val WAVEFORM_HEIGHT = 140
     }
