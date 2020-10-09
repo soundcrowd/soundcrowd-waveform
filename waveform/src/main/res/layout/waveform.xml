@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/waveform"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:visibility="invisible"
     android:orientation="vertical">
 
     <ImageView
@@ -19,8 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:alpha="0.8"
-        android:scaleType="matrix"
-        android:visibility="invisible" />
+        android:scaleType="matrix" />
 
     <ImageView
         android:id="@+id/imageViewWaveform"
@@ -32,7 +33,6 @@
         android:layout_alignTop="@id/imageViewWaveformArea"
         android:layout_centerVertical="true"
         android:scaleType="matrix"
-        android:visibility="invisible"
         android:layout_alignStart="@id/imageViewWaveformArea"
         android:layout_alignEnd="@id/imageViewWaveformArea" />
 
