@@ -25,7 +25,7 @@ object WaveformExtractor {
                 ?: throw IOException("Error when creating sound file")
         val values = computeDoublesForAllZoomLevels(soundFile.numFrames, soundFile.frameGains)
 
-        val sampleSize = Math.max(values.size / 1800, 1)
+        val sampleSize = (values.size / 1800).coerceAtLeast(1)
         var sampleValues = DoubleArray(sampleSize)
         val array = JSONArray()
         for (i in values.indices) {
@@ -39,7 +39,6 @@ object WaveformExtractor {
         }
         return array
     }
-
 
     private fun getGain(i: Int, numFrames: Int, frameGains: IntArray): Float {
         return if (numFrames < 2) {
@@ -113,5 +112,4 @@ object WaveformExtractor {
 
         return values
     }
-
 }

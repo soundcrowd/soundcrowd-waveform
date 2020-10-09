@@ -11,6 +11,8 @@ import android.graphics.Paint
 
 import org.json.JSONArray
 import org.json.JSONException
+import kotlin.math.ceil
+import kotlin.math.sqrt
 
 /**
  * Created by tiefensuche on 6/10/17.
@@ -39,7 +41,7 @@ object WaveformGenerator {
         paint.isAntiAlias = false
         paint.color = Color.BLACK
 
-        val sampleSize = Math.ceil((array.length().toFloat() / (width / (barWidth + barGap))).toDouble()).toInt()
+        val sampleSize = ceil((array.length().toFloat() / (width / (barWidth + barGap))).toDouble()).toInt()
         val actualBarWidth = width.toFloat() / (barWidth + barGap) / (array.length() / sampleSize)
         var samples = DoubleArray(sampleSize)
         for (i in 0 until array.length()) {
@@ -64,7 +66,7 @@ object WaveformGenerator {
         for (value in values) {
             squares += value * value
         }
-        return Math.sqrt(squares / values.size)
+        return sqrt(squares / values.size)
     }
 
     private fun invert(bitmap: Bitmap) {
