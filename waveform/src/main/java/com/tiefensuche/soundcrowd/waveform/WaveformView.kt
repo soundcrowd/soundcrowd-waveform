@@ -9,6 +9,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -153,7 +154,7 @@ class WaveformView : RelativeLayout, OnTouchListener {
         this.callback = callback
     }
 
-    fun drawCuePoint(cuePoint: CuePoint, duration: Int, icon: Bitmap) {
+    fun drawCuePoint(cuePoint: CuePoint, duration: Int, icon: Drawable) {
         val imageViewStar = ImageView(mContext)
         imageViewStar.setOnClickListener { callback?.onSeek(cuePoint.position.toLong()) }
 
@@ -199,18 +200,18 @@ class WaveformView : RelativeLayout, OnTouchListener {
             menu.show()
             true
         }
-        imageViewStar.setImageBitmap(icon)
+        imageViewStar.setImageDrawable(icon)
         imageViewStar.setColorFilter(Color.WHITE)
-        val params = LayoutParams(icon.width, icon.height)
-        params.leftMargin = (cuePoint.position.toLong() * desiredWidth / duration).toFloat().roundToInt() - icon.width / 2
+        val params = LayoutParams(icon.intrinsicWidth, icon.intrinsicHeight)
+        params.leftMargin = (cuePoint.position.toLong() * desiredWidth / duration).toFloat().roundToInt() - icon.intrinsicWidth / 2
         cuePointView.addView(imageViewStar, params)
 
         val paramsDesc = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         descLayout.addView(textView, paramsDesc)
 
         val paramsDescLayout = LayoutParams(textView.maxWidth, textView.maxHeight)
-        paramsDescLayout.leftMargin = params.leftMargin + icon.width
-        paramsDescLayout.topMargin = icon.height / 4
+        paramsDescLayout.leftMargin = params.leftMargin + icon.intrinsicWidth
+        paramsDescLayout.topMargin = icon.intrinsicHeight / 4
         cuePointView.addView(descLayout, paramsDescLayout)
     }
 
