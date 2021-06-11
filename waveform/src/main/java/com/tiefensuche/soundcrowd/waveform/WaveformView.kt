@@ -170,13 +170,11 @@ class WaveformView : RelativeLayout, OnTouchListener {
             menu.setOnMenuItemClickListener { menuItem ->
                 val i = menuItem.itemId
                 if (i == R.id.edit) {
-                    val layoutInflater = LayoutInflater.from(mContext)
-                    val promptView = layoutInflater.inflate(R.layout.input_dialog, null)
+                    val editText = EditText(mContext)
                     val alertDialogBuilder = AlertDialog.Builder(mContext)
-                    alertDialogBuilder.setView(promptView)
+                    alertDialogBuilder.setView(editText)
                     alertDialogBuilder.setTitle(mContext.getString(R.string.title))
 
-                    val editText = promptView.findViewById<EditText>(R.id.edittext)
                     editText.setText(textView.text)
                     // setup a dialog window
                     alertDialogBuilder.setCancelable(false)
