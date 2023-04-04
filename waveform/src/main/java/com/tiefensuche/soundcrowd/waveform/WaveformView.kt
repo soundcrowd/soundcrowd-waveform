@@ -76,7 +76,7 @@ class WaveformView : RelativeLayout, OnTouchListener {
         imageViewWaveformArea.minimumHeight = desiredHeight
         imageViewWaveformBackground.minimumWidth = desiredWidth
         imageViewWaveformBackground.minimumHeight = desiredHeight
-        setProgress(0, 1)
+        setProgress(0)
         scrolling = false
         callback?.onWaveformLoaded()
     }
@@ -85,7 +85,7 @@ class WaveformView : RelativeLayout, OnTouchListener {
         imageViewWaveformBackground.setBackgroundColor(vibrantColor)
     }
 
-    fun setProgress(position: Int, duration: Int) {
+    fun setProgress(position: Int) {
         if (click) {
             return
         }
