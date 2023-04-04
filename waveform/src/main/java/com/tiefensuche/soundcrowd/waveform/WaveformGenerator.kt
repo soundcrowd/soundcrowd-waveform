@@ -4,10 +4,7 @@
 
 package com.tiefensuche.soundcrowd.waveform
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 
 import org.json.JSONArray
 import org.json.JSONException
@@ -41,8 +38,8 @@ object WaveformGenerator {
         paint.isAntiAlias = false
         paint.color = Color.BLACK
 
-        val sampleSize = ceil((array.length().toFloat() / (width / (barWidth + barGap))).toDouble()).toInt()
-        val actualBarWidth = width.toFloat() / (barWidth + barGap) / (array.length() / sampleSize)
+        val sampleSize = ceil(array.length().toFloat() / (width.toFloat() / (barWidth + barGap))).toInt()
+        val actualBarWidth = width.toFloat() / (barWidth + barGap) / (array.length().toFloat() / sampleSize)
         var samples = DoubleArray(sampleSize)
         for (i in 0 until array.length()) {
             val value = (array.getDouble(i) / norm).toFloat()
